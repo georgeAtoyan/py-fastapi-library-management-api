@@ -23,8 +23,11 @@ def read_root():
     return {"msg": "Welcome to the library"}
 
 @app.get("/authors/", response_model=list[schemas.AuthorResponse])
-def get_authors(db: Session = Depends(get_db)):
-    return crud.get_authors_list(db)
+def get_authors(
+    skip: int = 0,
+    limit: int = 5,
+    db: Session = Depends(get_db)):
+    return crud.get_authors_list(db, skip, limit)
     
 
 @app.get("/authors/{id}", response_model=schemas.AuthorResponse)
@@ -42,7 +45,7 @@ def get_author_by_id(
 
     return crud.get_author_by_id(db, id)
 
-@app.post("/authors/", response_model=schemas.AuthorBase)
+@app.post("/authors/", response_model=schemas.AuthorResponse)
 def add_author(
     author: schemas.AddAuthor,
     db: Session = Depends(get_db)
@@ -61,8 +64,11 @@ def add_author(
     
 
 @app.get("/books/", response_model=list[schemas.BookResponse])
-def get_books(db: Session = Depends(get_db)):
-    return crud.get_books_list(db)
+def get_books(
+    skip: int = 0,
+    limit: int = 5,
+    db: Session = Depends(get_db)):
+    return crud.get_books_list(db, skip, limit)
 
 @app.get("/books/{author_id}", response_model=list[schemas.BookResponse])
 def get_books_by_author_id(
@@ -81,7 +87,7 @@ def get_books_by_author_id(
     result = crud.get_books_by_author_id(db, author_id)
     return result
 
-@app.post("/books/", response_model=schemas.BookBase)
+@app.post("/books/", response_model=schemas.BookResponse)
 def add_book(
     book: schemas.AddBook,
     db: Session = Depends(get_db)
