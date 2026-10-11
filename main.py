@@ -93,4 +93,11 @@ def add_book(
     db: Session = Depends(get_db)
 ):
     result = crud.add_book(db, book)
+
+    if result is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Author not found"
+        )
+
     return result
